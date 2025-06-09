@@ -1,30 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/github/explore/8f19e4dbbf13418dc1b1d58bb265953553c15a46/topics/google-classroom/google-classroom.png">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Google Classroom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Embed pn.adaptor.cl Safely</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #000;
+      overflow: hidden;
+      background-color: black;
     }
     iframe {
-      border: none;
       width: 100%;
       height: 100%;
+      border: none;
       display: block;
     }
   </style>
 </head>
 <body>
-  <iframe
-    src="https://pn.adaptor.cl/"
-    sandbox="allow-scripts allow-same-origin" 
-    allowfullscreen>
-  </iframe>
+  <iframe 
+    id="embed"
+    src="https://pn.adaptor.cl" 
+    sandbox="allow-scripts allow-same-origin allow-forms"
+    allowfullscreen
+    sandbox="allow-scripts allow-same-origin allow-forms"
+  ></iframe>
+
+  <script>
+    // Attempt to detect popup via hook in parent
+    let originalOpen = window.open;
+    window.open = function(...args) {
+      console.warn("Popup attempt blocked/detected:", args);
+      // You can alert the user or log
+      return null; // Prevent it
+    };
+
+    // Watch for focus change which might imply popup was triggered
+    let lastFocusTime = Date.now();
+    window.addEventListener("blur", () => {
+      lastFocusTime = Date.now();
+    });
+    setInterval(() => {
+      if (document.hasFocus() === false && (Date.now() - lastFocusTime < 3000)) {
+        console.log("Possible popup triggered (focus lost briefly).");
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
